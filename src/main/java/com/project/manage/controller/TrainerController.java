@@ -1,8 +1,10 @@
 package com.project.manage.controller;
 
+import com.project.manage.Dto.ClientCompletionStatusDTO;
 import com.project.manage.Dto.WorkoutPlanDTO;
 import com.project.manage.jwt.JwtUtil;
 import com.project.manage.model.WorkoutPlan;
+import com.project.manage.service.DailyWorkoutService;
 import com.project.manage.service.TrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ import java.util.List;
 public class TrainerController {
     @Autowired
     private TrainerService trainerService;
+
+    @Autowired
+    private DailyWorkoutService dailyWorkoutService;
 
     @PostMapping
     public ResponseEntity<String> createPlan(@RequestBody WorkoutPlan workoutPlan , Authentication authentication){
@@ -36,5 +41,15 @@ public class TrainerController {
         return ResponseEntity.ok("Updated successfully");
     }
 
+    @GetMapping("/trainer/client-completion")
+    public ResponseEntity<ClientCompletionStatusDTO> getClientCompletionStatus(
+            @RequestParam String clientUsername,
+            @RequestParam long planId,
+            @RequestParam int dayNumber) {
 
+        ClientCompletionStatusDTO statusDTO = dailyWorkoutService.getClientCompletionStatus(
+                clientUsername, planId, dayNumber);
+
+        return ResponseEntity.ok(statusDTO);
+    }
 }

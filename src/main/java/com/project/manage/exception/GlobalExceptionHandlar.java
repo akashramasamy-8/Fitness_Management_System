@@ -46,9 +46,22 @@ public class GlobalExceptionHandlar{
     }
 
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntime(RuntimeException ex) {
+        return ResponseEntity.status(500).body("Error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(WorkPlanNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleWorkPlan(WorkPlanNotFoundException ex){
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
     private ResponseEntity<Map<String, String>> buildResponse(HttpStatus status, String message) {
         Map<String, String> body = new HashMap<>();
         body.put("error", message);
         return new ResponseEntity<>(body, status);
     }
+
+
+
 }

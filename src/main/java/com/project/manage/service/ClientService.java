@@ -12,6 +12,7 @@ import com.project.manage.repository.WorkoutPlanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class ClientService {
         enrollment.setClient(client);
         enrollment.setWorkoutPlan(plan);
         enrollment.setProgressStatus(STARTED);
-        enrollment.setEnrollmentDate(LocalDateTime.now());
+        enrollment.setEnrollmentDate(LocalDate.now());
 
         enrollmentRepo.save(enrollment);
     }

@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,23 +13,22 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Enrollment {
+public class DailyWorkout {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long enrollmentId;
-    private LocalDate enrollmentDate;
-    @Enumerated(EnumType.STRING)
-    private Progress progressStatus;
+    private long dailyWorkoutId;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User client;
+    private int dayNumber;
 
     @ManyToOne
     @JoinColumn(name = "workoutId")
     private WorkoutPlan workoutPlan;
 
-    @OneToMany(mappedBy = "enrollment")
-    private List<WorkoutCompletion> completionList;
-
+    @ManyToMany
+    @JoinTable(
+            name = "daily_workout_exercise",
+            joinColumns = @JoinColumn(name = "daily_workout_id"),
+            inverseJoinColumns = @JoinColumn(name = "exercise_id")
+    )
+    private List<Exercise> exerciseList;
 }

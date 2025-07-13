@@ -17,6 +17,9 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
+
     public void registerUser(User user) {
         if(userRepository.existsByName(user.getName())){
             throw new UserNameAlreadyExistsException("Usernmae already taken");
@@ -29,6 +32,13 @@ public class AuthService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+
+        String subject = "Registration Successful";
+        String body = "Dear " + user.getName() + ",\n\n" +
+                "You have successfully registered as a " + user.getRole().name().toLowerCase() + " on our Fitness Platform.\n\n" +
+                "Welcome aboard!\nFitness Team";
+
+        emailSenderService.sendRegistrationEmail(user.getEmail(),subject,body);
     }
 
 

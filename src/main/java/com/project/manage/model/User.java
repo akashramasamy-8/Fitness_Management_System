@@ -29,4 +29,7 @@ public class User {
 
     @OneToMany(mappedBy = "client")
      private List<Enrollment> enrollments;
+
+    @OneToMany(mappedBy = "user")
+    private List<NutritionLog> nutritionLogs;
 }

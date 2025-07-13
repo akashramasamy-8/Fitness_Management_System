@@ -27,5 +27,4 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "workoutId")
     private WorkoutPlan workoutPlan;
-
 }
