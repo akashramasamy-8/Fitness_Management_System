@@ -6,27 +6,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkoutPlan {
+
+public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long workoutId;
-    private String title;
-    private String description;
+    private long notificationId;
+    private String message;
+
+    private boolean notified=false;
+    private LocalDateTime createdAt=LocalDateTime.now();
+    @ManyToOne
+    @JoinColumn(name = "workoutId")
+    private WorkoutPlan workoutPlan;
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User trainer;
-
-    @OneToMany(mappedBy = "workoutPlan")
-    private List<WorkoutModule> modules;
-
-    @OneToMany(mappedBy = "notificationId")
-    private List<Notification> notifications;
 }

@@ -32,4 +32,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<NutritionLog> nutritionLogs;
+
+    @OneToMany(mappedBy = "trainer")
+    private List<Notification> notifications;
 }

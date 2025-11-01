@@ -27,4 +27,6 @@ public class UserService {
         UserResponseDTO userResponseDTO=new UserResponseDTO(name,email,role);
         return userResponseDTO;
     }
+
+
 }

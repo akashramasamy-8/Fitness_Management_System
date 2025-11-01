@@ -11,6 +11,7 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender mailSender;
 
+
     public void sendRegistrationEmail(String toEmail ,String subject , String body){
         SimpleMailMessage mailMessage=new SimpleMailMessage();
         mailMessage.setFrom("akashramasamyk@gmail.com");

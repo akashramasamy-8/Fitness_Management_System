@@ -1,14 +1,18 @@
 package com.project.manage.service;
 
 import com.project.manage.Dto.EnrollmentDTO;
+import com.project.manage.Dto.NotificationMessageDTO;
 import com.project.manage.Dto.WorkoutPlanDTO;
+import com.project.manage.config.RabbitMQConfig;
 import com.project.manage.exception.ResourceNotFoundException;
 import com.project.manage.model.Enrollment;
+import com.project.manage.model.Notification;
 import com.project.manage.model.User;
 import com.project.manage.model.WorkoutPlan;
 import com.project.manage.repository.EnrollmentRepo;
 import com.project.manage.repository.UserRepository;
 import com.project.manage.repository.WorkoutPlanRepo;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,12 @@ public class ClientService {
     private UserRepository userRepository;
     @Autowired
     private EnrollmentRepo enrollmentRepo;
+
+    private final RabbitTemplate rabbitTemplate;
+
+     public ClientService(RabbitTemplate rabbitTemplate){
+         this.rabbitTemplate=rabbitTemplate;
+     }
 
     public List<WorkoutPlanDTO> getAllPlans(){
         List<WorkoutPlan> list=workoutPlanRepo.findAll();
@@ -56,6 +66,17 @@ public class ClientService {
         enrollment.setEnrollmentDate(LocalDate.now());
 
         enrollmentRepo.save(enrollment);
+
+        User trainer=workoutPlanRepo.findTrainerByWorkoutId(workoutPlanId);
+
+        NotificationMessageDTO dto = new NotificationMessageDTO();
+        dto.setTrinerId(trainer.getUserId());
+        dto.setWorkoutId(plan.getWorkoutId());
+        dto.setMessage(username + " is enrolled in your workout plan");
+        dto.setTrainerEmail(trainer.getEmail());
+
+        rabbitTemplate.convertAndSend(RabbitMQConfig.NOTIFICATION_QUEUE, dto);
+
     }
 
     public List<EnrollmentDTO> getEnrolledPlans(String username) {
